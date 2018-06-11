@@ -19,47 +19,49 @@ public final class Settings {
 	/**
 	 * The maximum speed ( pixel per keypress) a car can reach
 	 */
-	public static double CAR_MAX_SPEED = 6D;
+	public static final double CAR_MAX_SPEED = 6D;
 	/**
 	 * The amount that the car speed increases per keypress if it is below max
 	 */
-	public static double CAR_TICK_ACC = 0.7D;
+	public static final double CAR_TICK_ACC = 0.7D;
 	
 	/**
 	 * The amount that the car speed decreases per tick
 	 */
-	public static double CAR_TICK_DEC = 0.1D;
+	public static final double CAR_TICK_DEC = 0.1D;
 	
-	public static double CAR_TICK_DEC_OBS = 0.05D;
+	public static final double CAR_TICK_DEC_OBS = 0.05D;
 	
-	public static double CAR_SIZE_CONVERSION = 7D/5D;
+	public static final double CAR_SIZE_CONVERSION = 7D/5D;
 	
-	public static double CAR_CORNER_CONVERSION = 0.4D;
+	public static final double CAR_CORNER_CONVERSION = 0.4D;
 
 	/**
 	 * Multiply the car length/width and the distance in units with this constant to get the distance in pixels
 	 */
-	public static double CAR_LENGTH_TO_UNITS = 1D / 100D;
+	public static final double CAR_LENGTH_TO_UNITS = 1D / 100D;
 	
-	public static int TPS = 30;
+	public static final int TPS = 30;
 	
-	public static float LINE_WIDTH_CONVERSION = 0.02F;
+	public static final float LINE_WIDTH_CONVERSION = 0.02F;
 	
-	public static float LINE_DASH_CONVERSION = 0.2F;
+	public static final float LINE_DASH_CONVERSION = 0.2F;
 	
-	public static Color GRASS_COLOR = new Color(0x00, 0x40, 0x00);
+	public static final Color GRASS_COLOR = new Color(0x00, 0x40, 0x00);
 	
-	public static Color ROAD_COLOR = new Color(0x30, 0x30, 0x30);
+	public static final Color ROAD_COLOR = new Color(0x30, 0x30, 0x30);
 	
-	public static Color MARK_COLOR = new Color(0xB9, 0xB9, 0xB9);
+	public static final Color MARK_COLOR = new Color(0xB9, 0xB9, 0xB9);
 	
-	public static Color LIGHT_COLOR = new Color(0xFF, 0xFF, 0x0F);
+	public static final Color LIGHT_COLOR = new Color(0xFF, 0xFF, 0x0F);
 	
-	public static Color BORDER_COLOR = new Color(0x00, 0x10, 0x00);
+	public static final Color BORDER_COLOR = new Color(0x00, 0x10, 0x00);
 	
-	public static Color BANNER_BG_COLOR = new Color(0x00, 0x00, 0xB0);
+	public static final Color BANNER_BG_COLOR = new Color(0x00, 0x00, 0xB0);
 	
-	public static Color BANNER_FG_COLOR = getComplementaryColor(BANNER_BG_COLOR);
+	public static final Color BANNER_FG_COLOR = getComplementaryColor(BANNER_BG_COLOR);
+	
+	public static final int MAP_LENGTH = 2000;
 	
 	//From SO
 	public static Color getComplementaryColor(Color color) {
@@ -90,11 +92,10 @@ public final class Settings {
 	
 	public static Comparator<Number> numberComparator(){
 		return new Comparator<Number>() {
-
 			@Override
 			public int compare(Number o1, Number o2) {
-				if(Double.isNaN(o1.doubleValue())) return -1;
-				if(Double.isNaN(o2.doubleValue())) return 1;
+				if(Double.isNaN(o1.doubleValue())) return 1;
+				if(Double.isNaN(o2.doubleValue())) return -1;
 				if(o1.doubleValue() < o2.doubleValue()){
 					return -1;
 				}else if(o1.doubleValue() > o2.doubleValue()){

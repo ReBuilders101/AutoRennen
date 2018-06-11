@@ -87,7 +87,7 @@ public abstract class Menu implements GameState, KeyListener{
 				if(players == null){
 					MainFrame.getFrame().changeState(new OptionsMenu(MainMenu.this, true));
 				}else{
-					MainFrame.getFrame().changeState(new Strasse(3000, players, this));
+					MainFrame.getFrame().changeState(new Strasse(Settings.MAP_LENGTH, players, this));
 				}
 			}else if(index == 1){
 				//Submenu
@@ -145,7 +145,7 @@ public abstract class Menu implements GameState, KeyListener{
 			if(index == 0){
 				parent.handleReturn(super.id, (List<Auto>) getReturnData());
 				if(playAfter){
-					MainFrame.getFrame().changeState(new Strasse(3000, (List<Auto>) getReturnData(), parent));
+					MainFrame.getFrame().changeState(new Strasse(Settings.MAP_LENGTH, (List<Auto>) getReturnData(), parent));
 				}else{
 					MainFrame.getFrame().changeState(parent);
 				}
@@ -270,10 +270,14 @@ public abstract class Menu implements GameState, KeyListener{
 			super("results", parent, "");
 			menuItems = new String[results.size() + 1];
 			menuItems[0] = "Zurück";
-			Settings.sortByValue(results, Settings.numberComparator());
+			results = Settings.sortByValue(results, Settings.numberComparator());
 			int i = 1;
 			for(Auto key : results.keySet()){
-				menuItems[i] = String.format("%d. %s: %.3f s", i, key.getName(), results.get(key).doubleValue() / Settings.TPS);
+				if(Double.isNaN(results.get(key).doubleValue())){
+					menuItems[i] = String.format("%d. %s: Ausgeschieden", i, key.getName());
+				}else{
+					menuItems[i] = String.format("%d. %s: %.3f s", i, key.getName(), results.get(key).doubleValue() / Settings.TPS);
+				}
 				i++;
 			}
 		}
