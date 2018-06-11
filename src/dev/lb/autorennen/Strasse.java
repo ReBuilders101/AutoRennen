@@ -8,15 +8,19 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Strasse implements GameState, KeyListener{
 
 	private int scrollDistance;
 	private int goalDistance;
-	private int countDown, timer;
+	private int countDown, timer, deadCD;
 	private List<Auto> playerList;
 	private Menu returnTo;
+	private Map<Auto,Number> times;
+	private boolean raceOver;
 	
 	public Strasse(int distance, List<Auto> players, Menu returnto){
 		goalDistance = distance;
@@ -24,7 +28,12 @@ public class Strasse implements GameState, KeyListener{
 		countDown = 8 * Settings.TPS;
 		playerList = players;
 		returnTo = returnto;
-		playerList.forEach((a) -> a.playStartCutscene());
+		times = new HashMap<>();
+		for(Auto player : playerList){
+			player.reset();
+			player.playStartCutscene();
+			times.put(player, Double.NaN);
+		}
 	}
 	
 	@Override
@@ -34,9 +43,10 @@ public class Strasse implements GameState, KeyListener{
 		
 		for(Auto player : playerList){
 			player.handleTick();
-			if(player.getDistance() > goalDistance && player.isEngineOn()){
+			if(player.getDistance() > goalDistance && player.isEngineOn()){ //Player finishes race
 				player.turnOffFinal(400);
 				player.damage();
+				times.put(player, timer);
 			}
 			if(first == null){
 				first = player;
@@ -69,6 +79,26 @@ public class Strasse implements GameState, KeyListener{
 		}
 		if(countDown > 0){
 			countDown--;
+		}
+		
+		if(!raceOver){
+			//If all players are dead
+			boolean dead = true;
+			for(Auto player : playerList){
+				if(!player.isDone()){
+					dead = false;
+					break;
+				}
+			}
+			if(dead){
+				raceOver = true;
+			}
+		}else{
+			deadCD++;
+		}
+		
+		if(deadCD == Settings.TPS * 3){ //End race, show results
+			MainFrame.getFrame().changeState(new Menu.ResultMenu(returnTo, times));
 		}
 	}
 
@@ -155,7 +185,7 @@ public class Strasse implements GameState, KeyListener{
 		}
 		//Timer in the upper right color
 		double timerSeconds = Math.round(timer * 1000 / Settings.TPS) / 1000D;
-		String secondsString = String.format("Zeit: %2.3f s", timerSeconds);
+		String secondsString = String.format("Zeit: %.3f s", timerSeconds);
 		
 		double rectPxWidth = Settings.getPixels(carLength, 250);
 		double rectPxHeight = Settings.getPixels(carLength, 50);
@@ -176,7 +206,11 @@ public class Strasse implements GameState, KeyListener{
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {}
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+			MainFrame.getFrame().changeState(returnTo);
+		}
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {}
 }

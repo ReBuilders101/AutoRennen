@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Menu implements GameState, KeyListener{
 
@@ -142,10 +143,10 @@ public abstract class Menu implements GameState, KeyListener{
 		@Override
 		public void handleSelection(int index) {
 			if(index == 0){
+				parent.handleReturn(super.id, (List<Auto>) getReturnData());
 				if(playAfter){
 					MainFrame.getFrame().changeState(new Strasse(3000, (List<Auto>) getReturnData(), parent));
 				}else{
-					parent.handleReturn(super.id, (List<Auto>) getReturnData());
 					MainFrame.getFrame().changeState(parent);
 				}
 			}else if(index == 1){
@@ -265,26 +266,30 @@ public abstract class Menu implements GameState, KeyListener{
 	
 	public static class ResultMenu extends Menu{
 
-		public ResultMenu(String id, Menu parent, String[] items) {
-			super(id, parent, items);
-			// TODO Auto-generated constructor stub
+		public ResultMenu(Menu parent, Map<Auto,Number> results) {
+			super("results", parent, "");
+			menuItems = new String[results.size() + 1];
+			menuItems[0] = "Zurück";
+			Settings.sortByValue(results, Settings.numberComparator());
+			int i = 1;
+			for(Auto key : results.keySet()){
+				menuItems[i] = String.format("%d. %s: %.3f s", i, key.getName(), results.get(key).doubleValue() / Settings.TPS);
+				i++;
+			}
 		}
 
 		@Override
 		public void handleSelection(int index) {
-			// TODO Auto-generated method stub
-			
+			if(index == 0){
+				MainFrame.getFrame().changeState(parent);
+			}
 		}
 
 		@Override
-		public void handleReturn(String idFrom, Object data) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void handleReturn(String idFrom, Object data) {}
 
 		@Override
 		public Object getReturnData() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		

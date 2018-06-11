@@ -13,25 +13,31 @@ public class Auto {
 	private Color color;
 	private String name;
 	private int char1, char2, nextChar, engineChar, damageTicks;
-	private boolean engine, canTurnOn, finalCutscene, startCutscene, light, flash;
+	private boolean engine, canTurnOn, finalCutscene, startCutscene, light, flash, dead;
 	
 	public Auto(Color color, String name, int char1, int char2, int engineChar) {
 		this.color = color;
 		this.name = name;
 		this.char1 = char1;
 		this.char2 = char2;
+		this.engineChar = engineChar;
+		reset();
+	}
+
+	public void reset(){
 		this.distance = 0;
 		this.speed = 0;
 		this.damageTicks = 0;
 		this.nextChar = char1;
-		this.engineChar = engineChar;
 		this.engine = false;
 		this.light = false;
 		this.flash = false;
+		this.dead = false;
+		this.finalCutscene = false;
 		this.canTurnOn = false;
 		this.startCutscene = false;
 	}
-
+	
 	public boolean handleInput(int input){
 		return handleInput(input, false);
 	}
@@ -154,6 +160,10 @@ public class Auto {
 		Settings.drawCenteredString(g, name, shape.getBounds());
 	}
 	
+	public boolean isDone(){
+		return dead || finalCutscene;
+	}
+	
 	public double getDistance() {
 		return distance;
 	}
@@ -223,6 +233,7 @@ public class Auto {
 		engine = false;
 		canTurnOn = false;
 		light = false;
+		dead = true;
 	}
 	
 	public void damage(){

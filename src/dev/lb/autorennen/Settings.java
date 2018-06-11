@@ -5,6 +5,12 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public final class Settings {
 
@@ -62,10 +68,42 @@ public final class Settings {
 	
 	//From SO
 	public static void drawCenteredString(Graphics g, String text, Rectangle rect) {
+		if(text == null) return;
 	    FontMetrics fm = g.getFontMetrics();
 	    int x = rect.x + (rect.width - fm.stringWidth(text)) / 2;
 	    int y = rect.y + ((rect.height - fm.getHeight()) / 2) + fm.getAscent();
 	    g.drawString(text, x, y);
+	}
+	
+	//From SO
+	public static <K, V> Map<K, V> sortByValue(Map<K, V> map, Comparator<V> comp) {
+        List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Entry.comparingByValue(comp));
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
+    }
+	
+	public static Comparator<Number> numberComparator(){
+		return new Comparator<Number>() {
+
+			@Override
+			public int compare(Number o1, Number o2) {
+				if(Double.isNaN(o1.doubleValue())) return -1;
+				if(Double.isNaN(o2.doubleValue())) return 1;
+				if(o1.doubleValue() < o2.doubleValue()){
+					return -1;
+				}else if(o1.doubleValue() > o2.doubleValue()){
+					return 1;
+				}else{
+					return 0;
+				}
+			}
+		};
 	}
 	
 	public static float getFontSize(float pixelSize){
