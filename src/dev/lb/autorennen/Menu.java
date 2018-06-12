@@ -38,12 +38,12 @@ public abstract class Menu implements GameState, KeyListener{
 		
 		g.setColor(Settings.ROAD_COLOR);
 		g.fillRect(0, 0, width, height);
+		g.setFont(g.getFont().deriveFont(Settings.getFontSize(rowHeight / 4)));
 		
 		//The menu entries should be half as wide as the screen
 		for(int i = 0; i < menuItems.length; i++){
 			g.setColor(i == selectedIndex ? Settings.BANNER_FG_COLOR : Settings.BANNER_BG_COLOR);
 			g.fillRoundRect(width / 6, (int) (rowHeight * (i + 1.25)), width * 2 / 3, rowHeight / 2, 10, 10);
-			g.setFont(g.getFont().deriveFont(Settings.getFontSize(rowHeight / 3)));
 			g.setColor(i == selectedIndex ? Settings.BANNER_BG_COLOR : Settings.BANNER_FG_COLOR);
 			Settings.drawCenteredString(g, menuItems[i], new Rectangle(width / 6, (int) (rowHeight * (i + 1.25)), width * 2 / 3, rowHeight / 2));
 		}
